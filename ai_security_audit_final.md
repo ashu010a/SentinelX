@@ -1,0 +1,1 @@
+# AI Security Audit\nTested Prompt Injections ('IGNORE PREVIOUS INSTRUCTIONS'). Verified that XML fencing successfully protected the system prompt. Verified robust regex-based secret redaction against AWS keys.

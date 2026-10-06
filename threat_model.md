@@ -1,0 +1,1 @@
+# Threat Model\n- **Threat Actors:** Malicious unauthenticated users, compromised tenants, prompt injection actors.\n- **Attack Surfaces:** File Uploads (Scanners), AI Prompt generation, DB Isolation.\n- **Mitigations:** Strict ProjectID foreign key enforcement on all REST routes, XML fencing for AI context, and sanitized HTML generation for reports.

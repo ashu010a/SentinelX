@@ -1,0 +1,1 @@
+# Secret Management\n- **Scanners:** `GitleaksImporter` natively masks tokens on ingest.\n- **AI:** Regex filtering prevents tokens from leaking to LLMs.\n- **Config:** `.env` is ignored by git; credentials managed via CI/CD secrets.

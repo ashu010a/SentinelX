@@ -1,0 +1,1 @@
+{"results": {"failed_checks": [{"check_id": "CKV_AWS_1", "resource": "aws_s3_bucket.data", "file_path": "/main.tf"}]}}

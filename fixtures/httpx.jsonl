@@ -1,0 +1,2 @@
+{"url":"https://api.example.com","port":443,"host":"api.example.com","title":"API Gateway"}
+{"url":"http://dev.example.com","port":80,"host":"dev.example.com","title":"Dev Server"}

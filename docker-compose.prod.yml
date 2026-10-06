@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/sentinelx
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=production
+    depends_on: [db, redis]
+    ports: ["8000:8000"]
+    restart: always
+    security_opt: [no-new-privileges:true]
+    read_only: true
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=sentinelx
+    volumes: [pgdata:/var/lib/postgresql/data]
+  redis:
+    image: redis:7-alpine
+volumes:
+  pgdata:

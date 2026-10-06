@@ -1,0 +1,1 @@
+{"results": [{"check_id": "rules.python.flask.security.injection", "path": "app.py", "extra": {"severity": "ERROR"}}]}

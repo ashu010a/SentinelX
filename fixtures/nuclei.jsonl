@@ -1,0 +1,2 @@
+{"host":"api.example.com","info":{"name":"Exposed Swagger UI","severity":"medium"}}
+{"host":"dev.example.com","info":{"name":"Git Repository Found","severity":"high"}}

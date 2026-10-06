@@ -1,0 +1,1 @@
+[{"Status": "FAIL", "CheckID": "s3_bucket_public_access", "ResourceArn": "arn:aws:s3:::my-public-bucket", "Severity": "High"}]
