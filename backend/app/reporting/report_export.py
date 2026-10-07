@@ -3,7 +3,7 @@ import csv
 import io
 import html
 from sqlalchemy.orm import Session
-import models
+from app.models import schema as models
 import os
 
 def generate_report(db: Session, project_id: str, report_type: str, req_format: str, filters: dict):

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import models
+from app.models import schema as models
 from .correlation_models import SecurityGraph, GraphNode, GraphEdge, RiskPath
 
 def get_project_graph(project_id: str, db: Session) -> SecurityGraph:

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from datetime import datetime
 import hashlib
-import models
+from app.models import schema as models
 from .correlation_rules import RULES
 
 def generate_fingerprint(project_id: str, asset_id: str, title: str) -> str:

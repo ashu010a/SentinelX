@@ -1,9 +1,9 @@
 import sys
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine, SessionLocal
-import models
+from app.main import app
+from app.database import Base, sync_engine as engine, SyncSessionLocal as SessionLocal
+from app.models import schema as models
 from app.correlation import relationship_service
 
 Base.metadata.create_all(bind=engine)
@@ -49,7 +49,7 @@ relationship_service.run_correlation_engine(p1.id, db)
 
 # Test API Graph
 print("Fetching Security Graph...")
-graph = client.get(f"/api/projects/{p1.id}/graph").json()
+graph = client.get(f"/api/v1/projects/{p1.id}/graph").json()
 nodes = graph['nodes']
 edges = graph['edges']
 print(f"Graph generated: {len(nodes)} nodes, {len(edges)} edges")
@@ -63,7 +63,7 @@ assert "cryptographic subdomain" in subdomain_edge['explanation']
 
 # Test Risk Paths
 print("Calculating Risk Paths...")
-paths = client.get(f"/api/projects/{p1.id}/risk-paths").json()
+paths = client.get(f"/api/v1/projects/{p1.id}/risk-paths").json()
 print(f"Identified {len(paths)} potential security paths.")
 assert len(paths) == 1
 assert paths[0]['highest_risk_finding'] == "Swagger UI Exposed"

@@ -2,9 +2,9 @@ import sys
 import os
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine, SessionLocal
-import models
+from app.main import app
+from app.database import Base, sync_engine as engine, SyncSessionLocal as SessionLocal
+from app.models import schema as models
 from datetime import datetime
 
 # Reset DB
@@ -39,7 +39,7 @@ assert (due_date - datetime.utcnow()).days in [0, 1] # 24 hours / 1 day
 
 # 2. Test Remediation Workflow
 print("\nAssigning Finding and Changing Status...")
-db.close(); res = client.patch(f"/api/findings/{fid}/remediation", json={"owner": "SecEngTeam", "remediation_status": "IN_PROGRESS"})
+db.close(); res = client.patch(f"/api/v1/findings/{fid}/remediation", json={"owner": "SecEngTeam", "remediation_status": "IN_PROGRESS"})
 assert res.status_code == 200
 data = res.json()
 assert data['owner'] == "SecEngTeam"
@@ -53,11 +53,11 @@ for log in logs: print(f" - [AUDIT] {log.action} on {log.object_type} {log.objec
 
 # 4. Test Reporting Engine (Exports)
 print("\nGenerating HTML Technical Report...")
-client.post(f"/api/projects/{pid}/reports", json={"report_type": "technical", "format": "html"})
+client.post(f"/api/v1/projects/{pid}/reports", json={"report_type": "technical", "format": "html"})
 print("Generating JSON Executive Report...")
-client.post(f"/api/projects/{pid}/reports", json={"report_type": "executive", "format": "json"})
+client.post(f"/api/v1/projects/{pid}/reports", json={"report_type": "executive", "format": "json"})
 print("Generating CSV Remediation Report...")
-client.post(f"/api/projects/{pid}/reports", json={"report_type": "remediation", "format": "csv"})
+client.post(f"/api/v1/projects/{pid}/reports", json={"report_type": "remediation", "format": "csv"})
 
 exports = os.listdir("exports")
 print(f"\nGenerated {len(exports)} export artifacts:")
@@ -73,9 +73,9 @@ for x in exports:
         # Ensure it's safe rendering (in python html.escape escapes tags)
         
 # 6. Operations & Compliance Dashboards
-ops = client.get(f"/api/projects/{pid}/operations").json()
+ops = client.get(f"/api/v1/projects/{pid}/operations").json()
 print(f"\nOps Dashboard: {ops['open_findings']} open findings.")
-comp = client.get(f"/api/projects/{pid}/compliance").json()
+comp = client.get(f"/api/v1/projects/{pid}/compliance").json()
 print(f"Compliance Dashboard (NIST): {comp['frameworks']['NIST']['coverage']} coverage.")
 
 # Write Documentation

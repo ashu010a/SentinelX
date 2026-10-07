@@ -3,7 +3,7 @@ from sqlalchemy import desc
 from .risk_engine import calculate_finding_risk
 from .risk_models import FindingRiskInput
 from .risk_policy import POLICY_VERSION, get_category, get_trend
-import models
+from app.models import schema as models
 
 def save_risk_history(db: Session, entity_type: str, entity_id: str, project_id: str, result, previous_score: float = None):
     delta = round(result.score - previous_score, 1) if previous_score is not None else 0.0

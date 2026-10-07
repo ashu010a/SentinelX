@@ -2,8 +2,8 @@
 import sys
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine
+from app.main import app
+from app.database import Base, engine
 
 # Ensure DB schema matches new models
 Base.metadata.create_all(bind=engine)
@@ -12,13 +12,13 @@ client = TestClient(app)
 
 print("--- Starting Importer Verification ---")
 # 1. Create Project
-project = client.post("/api/projects", json={"name": "Ingestion Test"}).json()
+project = client.post("/api/v1/projects", json={"name": "Ingestion Test"}).json()
 pid = project['id']
 print(f"Created project: {pid}")
 
 def upload_file(scanner, filepath):
     with open(filepath, "rb") as f:
-        res = client.post("/api/imports", data={"project_id": pid, "scanner_name": scanner}, files={"file": (filepath, f, "application/json")})
+        res = client.post("/api/v1/imports", data={"project_id": pid, "scanner_name": scanner}, files={"file": (filepath, f, "application/json")})
     return res.json()
 
 # 2. Upload Subfinder (New Assets)
@@ -34,8 +34,8 @@ res3 = upload_file("nuclei", "fixtures/nuclei.jsonl")
 print(f"Nuclei Import: {res3['findings_created']} created, {res3['findings_updated']} updated. Status: {res3['status']}")
 
 # 5. Validate Database Impact
-assets = client.get(f"/api/projects/{pid}/assets").json()
-findings = client.get(f"/api/projects/{pid}/findings").json()
+assets = client.get(f"/api/v1/projects/{pid}/assets").json()
+findings = client.get(f"/api/v1/projects/{pid}/findings").json()
 
 print(f"Total Database Assets: {len(assets)}")
 print(f"Total Database Findings: {len(findings)}")

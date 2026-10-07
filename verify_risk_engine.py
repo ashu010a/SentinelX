@@ -1,8 +1,8 @@
 
 import sys
 sys.path.append('backend')
-from database import SessionLocal, Base, engine
-import models
+from app.database import SyncSessionLocal, Base, engine
+from app.models import schema as models
 from risk_engine import update_asset_risk
 
 Base.metadata.create_all(bind=engine)

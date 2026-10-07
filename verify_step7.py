@@ -2,12 +2,12 @@ import sys
 import os
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine, SessionLocal
-import models
+from app.main import app
+from app.database import Base, sync_engine as engine, SyncSessionLocal as SessionLocal
+from app.models import schema as models
 from app.correlation import relationship_service
 from app.monitoring import diff_engine
-from importers import get_importer
+from app.services.importers import get_importer
 
 print("--- Starting Unified Application & Cloud Security Verification ---")
 
@@ -62,7 +62,7 @@ assert "***" in evidence.data['masked_secret'] or "*" in evidence.data['masked_s
 
 # Verify Unified Correlation
 relationship_service.run_correlation_engine(pid, db)
-graph = client.get(f"/api/projects/{pid}/graph").json()
+graph = client.get(f"/api/v1/projects/{pid}/graph").json()
 print(f"\nUnified Security Graph Generated: {len(graph['nodes'])} nodes, {len(graph['edges'])} inferred relationships.")
 
 # Verify Snapshot & Monitoring Integration

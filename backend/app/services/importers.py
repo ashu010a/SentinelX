@@ -1,7 +1,7 @@
 
 import json
 from abc import ABC, abstractmethod
-import models
+from app.models import schema as models
 
 class ScannerResultImporter(ABC):
     scanner_name = ""

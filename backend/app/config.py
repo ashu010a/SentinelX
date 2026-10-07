@@ -1,36 +1,29 @@
-"""SentinelX configuration module."""
-
-from functools import lru_cache
-
+import os
 from pydantic_settings import BaseSettings
 
-
 class Settings(BaseSettings):
-    """Application settings loaded from environment variables."""
-
-    # Database
-    DATABASE_URL: str = "postgresql+asyncpg://sentinelx:sentinelx@db:5432/sentinelx"
-    DATABASE_URL_SYNC: str = "postgresql+psycopg2://sentinelx:sentinelx@db:5432/sentinelx"
-
-    # Redis
-    REDIS_URL: str = "redis://redis:6379/0"
-
-    # Celery
-    CELERY_BROKER_URL: str = "redis://redis:6379/0"
-    CELERY_RESULT_BACKEND: str = "redis://redis:6379/1"
-
-    # API
-    API_PREFIX: str = "/api/v1"
-    DEBUG: bool = True
     PROJECT_NAME: str = "SentinelX"
-    VERSION: str = "0.1.0"
+    VERSION: str = "1.0.0-rc1"
+    DEBUG: bool = False
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./sentinelx.db")
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "")
+    
+    @property
+    def sync_database_url(self) -> str:
+        url = self.DATABASE_URL
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql://", 1)
+        return url
 
-    # Scanner timeouts (seconds)
-    SCANNER_TIMEOUT: int = 600
+    @property
+    def async_database_url(self) -> str:
+        url = self.sync_database_url
+        if url.startswith("postgresql://"):
+            url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        elif url.startswith("sqlite://"):
+            url = url.replace("sqlite://", "sqlite+aiosqlite://", 1)
+        return url
 
-    model_config = {"env_file": ".env", "extra": "ignore"}
-
-
-@lru_cache
-def get_settings() -> Settings:
+def get_settings():
     return Settings()

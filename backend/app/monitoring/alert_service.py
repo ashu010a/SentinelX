@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import models
+from app.models import schema as models
 
 def trigger_alert(db: Session, project_id: str, message: str, severity: str):
     # Abstracted Webhook/In-app dispatcher

@@ -1,9 +1,9 @@
 import sys
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine, SessionLocal
-import models
+from app.main import app
+from app.database import Base, sync_engine as engine, SyncSessionLocal as SessionLocal
+from app.models import schema as models
 from datetime import datetime
 
 # Reset DB for clean test
@@ -56,7 +56,7 @@ def mock_scan_ingest(scan_id: str, findings_data: list):
     db.commit()
     
     # Run Diff
-    client.post(f"/api/projects/{pid}/snapshots/generate?scan_id={scan_id}")
+    client.post(f"/api/v1/projects/{pid}/snapshots/generate?scan_id={scan_id}")
 
 print("\n[SCENARIO 1] Scan A: 1 Asset, 1 High Finding")
 mock_scan_ingest("SCAN_A", [{"asset": "api.risk.com", "title": "Exposed Git", "severity": "high"}])
@@ -68,9 +68,9 @@ print("[SCENARIO 3] Scan C: Finding Reopens!")
 mock_scan_ingest("SCAN_C", [{"asset": "api.risk.com", "title": "Exposed Git", "severity": "high"}])
 
 # Verification Asserts
-timeline = client.get(f"/api/projects/{pid}/timeline-events").json()
-alerts = client.get(f"/api/projects/{pid}/alerts").json()
-snapshots = client.get(f"/api/projects/{pid}/snapshots").json()
+timeline = client.get(f"/api/v1/projects/{pid}/timeline-events").json()
+alerts = client.get(f"/api/v1/projects/{pid}/alerts").json()
+snapshots = client.get(f"/api/v1/projects/{pid}/snapshots").json()
 
 print(f"\n--- Verification Results ---")
 print(f"Total Snapshots: {len(snapshots)}")

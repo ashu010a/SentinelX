@@ -1,9 +1,9 @@
 import sys
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine, SessionLocal
-import models
+from app.main import app
+from app.database import Base, sync_engine as engine, SyncSessionLocal as SessionLocal
+from app.models import schema as models
 
 Base.metadata.create_all(bind=engine)
 client = TestClient(app)
@@ -27,7 +27,7 @@ db.commit()
 fid = f.id
 
 print("Triggering Finding Risk Calculation Endpoint...")
-res = client.get(f"/api/findings/{fid}/risk")
+res = client.get(f"/api/v1/findings/{fid}/risk")
 assert res.status_code == 200, res.text
 data = res.json()
 
@@ -36,7 +36,7 @@ assert data['score'] == 10.0
 assert data['category'] == 'Critical'
 
 print("Triggering Top Findings Priority Endpoint...")
-top = client.get(f"/api/projects/{pid}/risk/top-findings").json()
+top = client.get(f"/api/v1/projects/{pid}/risk/top-findings").json()
 assert len(top) > 0
 print(f"Top finding fetched successfully: {top[0]['score']}")
 

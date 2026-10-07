@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import Session
-import models
+from app.models import schema as models
 
 def calculate_finding_risk(cvss: float, epss: float, kev: bool, exposed: bool, criticality: str, confidence: str):
     reasons = []

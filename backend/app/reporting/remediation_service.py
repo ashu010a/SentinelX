@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
-import models
+from app.models import schema as models
 
 def calculate_sla_due_date(db: Session, project_id: str, severity: str, created_at: datetime):
     settings = db.query(models.ProjectSettings).filter_by(project_id=project_id).first()

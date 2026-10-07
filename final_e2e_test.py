@@ -2,9 +2,9 @@ import sys
 import time
 sys.path.append('backend')
 from fastapi.testclient import TestClient
-from main import app
-from database import Base, engine, SessionLocal
-import models
+from app.main import app
+from app.database import Base, sync_engine as engine, SyncSessionLocal as SessionLocal
+from app.models import schema as models
 from app.monitoring import diff_engine
 
 print("--- Starting SentinelX Final E2E, Load, & Security Test ---")
@@ -67,11 +67,11 @@ print("\n[E2E] Running full workflow...")
 diff_engine.generate_snapshot_and_diff(db, p1.id, "FINAL_SCAN")
 print("-> Pass: Diff Engine processed 5,000 findings seamlessly.")
 
-res = client.post(f"/api/projects/{p1.id}/reports", json={"report_type": "technical", "format": "html"})
+res = client.post(f"/api/v1/projects/{p1.id}/reports", json={"report_type": "technical", "format": "html"})
 assert res.status_code == 200
 print("-> Pass: HTML Report Generated Safely.")
 
-res_ai = client.post(f"/api/projects/{p1.id}/assistant/chat", json={"conversation_id": "final-1", "question": "Generate an executive summary."})
+res_ai = client.post(f"/api/v1/projects/{p1.id}/assistant/chat", json={"conversation_id": "final-1", "question": "Generate an executive summary."})
 assert res_ai.status_code == 200
 print("-> Pass: AI Integration verified under load.")
 

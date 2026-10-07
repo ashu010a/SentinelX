@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import models
+from app.models import schema as models
 from sqlalchemy.orm import Session
 
 class CorrelationRule(ABC):

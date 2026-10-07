@@ -2,7 +2,7 @@ import socket
 import uuid
 import urllib.request
 from sqlalchemy.orm import Session
-import models
+from app.models import schema as models
 
 def perform_scan(scan_job_id: str, project_id: str, target: str, db: Session):
     try:

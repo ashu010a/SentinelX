@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from .providers.mock_provider import MockLLMProvider
 from .ai_context import build_security_context
-import models
+from app.models import schema as models
 
 def classify_intent(question: str) -> str:
     q = question.lower()

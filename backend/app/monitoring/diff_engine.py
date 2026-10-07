@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import models
+from app.models import schema as models
 from .alert_service import trigger_alert
 from datetime import datetime
 
