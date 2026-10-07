@@ -1,7 +1,18 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
+
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apt-get purge -y --auto-remove gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY . .
-RUN useradd -m -s /bin/bash sentinelx && chown -R sentinelx:sentinelx /app
+
+# Non-root user execution
+RUN useradd -m sentinelx && chown -R sentinelx /app
 USER sentinelx
+
+EXPOSE 8000
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers
