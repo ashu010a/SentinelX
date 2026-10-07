@@ -8,12 +8,14 @@ Provision Managed PostgreSQL and Redis within a single Railway environment. This
 
 ## 2. API Service
 1. Connect Railway to your GitHub repository.
-2. Set Root Directory to `/` (if monorepo) or `/backend`.
-3. Railway will detect `railway.toml` and build via `backend/Dockerfile.prod`.
+2. Go to Settings > Service > Root Directory and set it to `/backend`.
+3. Go to Variables and add `RAILWAY_DOCKERFILE_PATH=Dockerfile.prod` (this forces Docker instead of Railpack).
 4. Ensure `PORT` is bound automatically by Railway, overriding default `8000`.
 
 ## 3. Celery Worker
-Duplicate the API service in Railway. Change the Start Command to:
+1. Duplicate the API service in Railway.
+2. In Variables, change `RAILWAY_DOCKERFILE_PATH` to `Dockerfile.worker`.
+3. In Settings, change the Custom Start Command to:
 `celery -A main.celery_app worker --loglevel=info`
 
 ## 4. Frontend

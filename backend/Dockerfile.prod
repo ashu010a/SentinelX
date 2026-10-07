@@ -1,14 +1,14 @@
 FROM python:3.12-slim
 
 WORKDIR /app
-COPY backend/requirements.txt .
+COPY requirements.txt .
 
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev \
     && pip install --no-cache-dir -r requirements.txt \
     && apt-get purge -y --auto-remove gcc \
     && rm -rf /var/lib/apt/lists/*
 
-COPY backend/ .
+COPY . .
 
 # Non-root user execution
 RUN useradd -m sentinelx && chown -R sentinelx /app
